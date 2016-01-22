@@ -11,31 +11,45 @@ var App = React.createClass({
   getInitialState : function() {
     return {
       todos : {},
+      completed : {}
     }
   },
-  count: 0,
   addTodo : function(todo) {
-    this.count++;
+    var date = (new Date()).getTime();
     // add todo to App state
-    this.state.todos['todo-' + this.count] = todo;
+    this.state.todos['todo-' + date] = todo;
     // update state
     this.setState({
       todos : this.state.todos
     });
   },
   renderTodo : function(key) {
-    if (!this.state.todos[key].completed) {
-      return (
-        <Todo key={key} details={this.state.todos[key]} />
-      )
-    }
+    return (
+      <Todo key={key} index={key} details={this.state.todos[key]} toggleTodo={this.completeTodo} />
+    )
   },
   renderTodoDone : function(key) {
-    if (this.state.todos[key].completed) {
-      return (
-        <Todo key={key} details={this.state.todos[key]} />
-      )
-    }
+    return (
+      <Todo key={key} index={key} toggleTodo={this.uncompleteTodo} details={this.state.completed[key]} />
+    )
+  },
+  completeTodo : function(key) {
+    this.state.completed[key] = this.state.todos[key];
+    this.state.completed[key].completed = true;
+    delete this.state.todos[key];
+    this.setState({
+      todos : this.state.todos,
+      completed : this.state.completed
+    })
+  },
+  uncompleteTodo : function(key) {
+    this.state.todos[key] = this.state.completed[key];
+    this.state.todos[key].completed = false;
+    delete this.state.completed[key];
+    this.setState({
+      todos : this.state.todos,
+      completed : this.state.completed
+    })    
   },
   loadData : function() {
     this.setState({
@@ -56,7 +70,7 @@ var App = React.createClass({
         </div>
         <div className="container">
           <h2>Completed:</h2>
-          {Object.keys(this.state.todos).map(this.renderTodoDone)}
+          {Object.keys(this.state.completed).map(this.renderTodoDone)}
         </div>       
         <ul className="list-of-todos">
         </ul>
@@ -68,10 +82,22 @@ var App = React.createClass({
 // todo class
 
 var Todo = React.createClass({
+  toggle : function() {
+    console.log('toggling..');
+    this.props.toggleTodo(this.props.index);
+  },
   render : function() {
     var details = this.props.details;
+    var completed = details.completed;
+    var getClasses = function () {
+      if (completed) {
+        return "todo-item completed";
+      } else {
+        return "todo-item not-completed";
+      }
+    }
     return (
-      <li className="todo-item">
+      <li className={getClasses()} onClick={this.toggle}>
         <h4 className="todo-title">{details.title}</h4>
         <p className="todo-details">{details.details}</p>
       </li>

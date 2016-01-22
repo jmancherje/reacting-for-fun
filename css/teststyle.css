@@ -16,6 +16,10 @@ li.todo-item {
   cursor: pointer;
 }
 
-li.todo-item:hover {
-  background-color: lightgreen;
+.not-completed:hover {
+  background-color: lightgreen; 
+}
+
+.completed:hover {
+  background-color: lightpink;
 }
