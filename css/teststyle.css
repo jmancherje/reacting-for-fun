@@ -1,0 +1,21 @@
+div.container {
+  display: inline-block;
+  max-width: 300px;
+  max-height: 500px;
+  overflow: auto;
+  float: left;
+  margin-right: 20px;
+  min-width: 150px;
+}
+
+li.todo-item {
+  border: 1px solid black;
+  margin-bottom: 5px;
+  padding: 0 10px 10px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+li.todo-item:hover {
+  background-color: lightgreen;
+}
